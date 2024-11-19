@@ -5,3 +5,7 @@
 3. "女王蜂" 公會協助編譯
 
 4.歡迎自行使用
+
+5.
+
+https://hinake27.github.io/New-Mabinogi-TW/
