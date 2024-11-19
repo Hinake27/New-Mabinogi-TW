@@ -2,10 +2,10 @@
 
 2.ClaudeAI.
 
-3. "女王蜂" 公會協助編譯
+3.歡迎自行使用
 
-4.歡迎自行使用
 
-5.
-
+"女王蜂" 公會成員協助編譯
 https://hinake27.github.io/New-Mabinogi-TW/
+
+
