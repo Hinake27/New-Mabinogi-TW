@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新瑪奇計算器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .calculator {
+            display: none;
+        }
+
+        .calculator.active {
+            display: block;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .result {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+            border-left: 4px solid #007bff;
+            display: none;
+            white-space: pre-line;
+        }
+
+        .switch {
+            margin-bottom: 15px;
+        }
+
+        .notice {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .formula {
+            color: #666;
+            font-family: monospace;
+        }
+
+        .result {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .section p {
+            margin: 5px 0;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('currency')">遊戲幣計算器</button>
+            <button class="tab" onclick="switchTab('bank')">銀行交易計算器</button>
+            <button class="tab" onclick="switchTab('auction')">拍賣手續費計算</button>
+        </div>
+
+<!-- 遊戲幣計算器 -->
+        <div id="currency" class="calculator active">
+            <h2>新瑪奇遊戲幣計算器</h2>
+            
+            <div class="switch">
+                <label>
+                    <input type="checkbox" id="customRateToggle" onchange="toggleCustomRate()">
+                    自定義匯率
+                </label>
+            </div>
+
+            <div id="customRateInput" class="input-group" style="display: none;">
+                <label>自定義匯率：</label>
+                <input type="number" id="exchangeRate" value="160000">
+            </div>
+
+            <div class="input-group">
+                <label>台幣金額：</label>
+                <input type="number" id="twdAmount" placeholder="請輸入金額">
+            </div>
+
+            <button onclick="calculateCurrency()">計算遊戲幣</button>
+            <div id="currencyResult" class="result"></div>
+
+            <div class="notice">
+                - 預設匯率為 1台幣 = 1,000,000 遊戲幣<br>
+                - 自定義匯率預設值為 1台幣 = 160,000 遊戲幣
+            </div>
+        </div>
+
+        <!-- 銀行交易計算器 -->
+        <div id="bank" class="calculator">
+            <h2>新瑪奇銀行交易計算器</h2>
+            
+            <div class="input-group">
+                <label>交易類型：</label>
+                <select id="transactionType">
+                    <option value="cashDeposit">現金存入銀行</option>
+                    <option value="cashWithdraw">現金提取銀行</option>
+                    <option value="checkIssue">支票開立</option>
+                    <option value="checkDeposit">支票存入銀行</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>交易金額（瑪幣）：</label>
+                <input type="number" id="bankAmount" placeholder="請輸入金額">
+            </div>
+
+            <div class="switch">
+                <label>
+                    <input type="checkbox" id="wednesdayDiscount">
+                    禮拜三折扣
+                </label>
+            </div>
+
+            <button onclick="calculateBank()">計算交易</button>
+            <div id="bankResult" class="result"></div>
+
+            <div class="notice">
+                - 現金交易：提取無手續費，存入需扣 10%（週三 7.5%）<br>
+                - 支票交易：開立需付 5% 手續費（週三 3.75%），存入無手續費
+            </div>
+        </div>
+
+        <!-- 拍賣手續費計算器 -->
+        <div id="auction" class="calculator">
+            <h2>拍賣手續費計算器</h2>
+            
+            <div class="switch">
+                <label>
+                    <input type="checkbox" id="includeCheckFee">
+                    計算支票手續費
+                </label>
+            </div>
+
+            <div class="input-group">
+                <label>拍賣金額（瑪幣）：</label>
+                <input type="number" id="auctionAmount" placeholder="請輸入金額">
+            </div>
+
+            <button onclick="calculateAuctionFee()">計算手續費</button>
+            <div id="auctionResult" class="result"></div>
+
+            <div class="notice">
+                - 一般物品：拍賣手續費 5% / 支票手續費 5%<br>
+                - 生活服務物品：拍賣手續費 4% / 支票手續費 4%<br>
+                - 如同時使用支票，將依序扣除拍賣手續費和支票手續費
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.calculator').forEach(calc => calc.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleCustomRate() {
+            const customRateInput = document.getElementById('customRateInput');
+            customRateInput.style.display = document.getElementById('customRateToggle').checked ? 'block' : 'none';
+        }
+
+        function calculateCurrency() {
+            const amount = parseFloat(document.getElementById('twdAmount').value);
+            const rate = document.getElementById('customRateToggle').checked 
+                ? parseFloat(document.getElementById('exchangeRate').value)
+                : 1000000;
+                
+            if (isNaN(amount) || amount <= 0) {
+                alert('請輸入有效金額');
+                return;
+            }
+            
+            const totalCurrency = Math.floor(amount * rate);
+            
+            const resultDiv = document.getElementById('currencyResult');
+            resultDiv.textContent = `${amount.toLocaleString()} 台幣 = ${totalCurrency.toLocaleString()} 遊戲幣`;
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateBank() {
+            const amount = parseFloat(document.getElementById('bankAmount').value);
+            const type = document.getElementById('transactionType').value;
+            const isWednesday = document.getElementById('wednesdayDiscount').checked;
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('請輸入有效金額');
+                return;
+            }
+
+            let fee = 0;
+            let finalAmount = amount;
+            let message = '';
+
+            switch (type) {
+                case 'cashDeposit':
+                    fee = Math.floor(amount * (isWednesday ? 0.075 : 0.1));
+                    finalAmount = Math.floor(amount - fee);
+                    message = `存入銀行需扣除手續費：${fee.toLocaleString()} 瑪幣，實際存入：${finalAmount.toLocaleString()} 瑪幣`;
+                    break;
+                case 'cashWithdraw':
+                    message = `從銀行提取現金無手續費，實際提取金額：${Math.floor(finalAmount).toLocaleString()} 瑪幣`;
+                    break;
+                case 'checkIssue':
+                    fee = Math.floor(amount * (isWednesday ? 0.0375 : 0.05));
+                    finalAmount = Math.floor(amount + fee);
+                    message = `開立支票需支付手續費：${fee.toLocaleString()} 瑪幣，總支出：${finalAmount.toLocaleString()} 瑪幣`;
+                    break;
+                case 'checkDeposit':
+                    message = `支票存入銀行無手續費，實際存入金額：${Math.floor(finalAmount).toLocaleString()} 瑪幣`;
+                    break;
+            }
+
+            const resultDiv = document.getElementById('bankResult');
+            resultDiv.textContent = message;
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateAuctionFee() {
+            const amount = parseFloat(document.getElementById('auctionAmount').value);
+            const includeCheckFee = document.getElementById('includeCheckFee').checked;
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('請輸入有效金額');
+                return;
+            }
+
+            // 計算一般物品
+            const normalAuctionFee = Math.floor(amount * 0.05);
+            const afterNormalAuction = Math.floor(amount * 0.95);
+            let normalFinal = afterNormalAuction;
+            let normalCheckFee = 0;
+            if (includeCheckFee) {
+                normalCheckFee = Math.floor(afterNormalAuction * 0.05);
+                normalFinal = Math.floor(afterNormalAuction * 0.95);
+            }
+
+            // 計算生活服務物品
+            const lifeAuctionFee = Math.floor(amount * 0.04);
+            const afterLifeAuction = Math.floor(amount * 0.96);
+            let lifeFinal = afterLifeAuction;
+            let lifeCheckFee = 0;
+            if (includeCheckFee) {
+                lifeCheckFee = Math.floor(afterLifeAuction * 0.04);
+                lifeFinal = Math.floor(afterLifeAuction * 0.96);
+            }
+            
+            // 組合顯示訊息
+            const resultDiv = document.getElementById('auctionResult');
+            let message = `<div class="section">
+                <h2>一般物品</h2>
+                <p>初始金額: <strong>${amount.toLocaleString()}</strong></p>
+                <p>拍賣手續費（5%）後: <span class="formula">${amount.toLocaleString()} × 0.95 = ${afterNormalAuction.toLocaleString()}</span></p>`;
+                
+            if (includeCheckFee) {
+                message += `<p>支票手續費（5%）後: <span class="formula">${afterNormalAuction.toLocaleString()} × 0.95 = ${normalFinal.toLocaleString()}</span></p>`;
+            }
+            
+            message += `<p>最終金額: <span class="result">${normalFinal.toLocaleString()}</span></p>
+            </div>`;
+
+            message += `<div class="section">
+                <h2>生活服務物品</h2>
+                <p>初始金額: <strong>${amount.toLocaleString()}</strong></p>
+                <p>拍賣手續費（4%）後: <span class="formula">${amount.toLocaleString()} × 0.96 = ${afterLifeAuction.toLocaleString()}</span></p>`;
+                
+            if (includeCheckFee) {
+                message += `<p>支票手續費（4%）後: <span class="formula">${afterLifeAuction.toLocaleString()} × 0.96 = ${lifeFinal.toLocaleString()}</span></p>`;
+            }
+            
+            message += `<p>最終金額: <span class="result">${lifeFinal.toLocaleString()}</span></p>
+            </div>`;
+            
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
