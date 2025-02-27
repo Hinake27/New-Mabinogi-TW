@@ -149,6 +149,36 @@
             margin: 5px 0;
         }
 
+        .converter-toggle {
+            margin-bottom: 15px;
+        }
+
+        .converter-toggle label {
+            display: inline-block;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .converter-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .converter-inputs button {
+            margin-top: 22px;
+            height: 39px;
+            width: 40px;
+            flex-shrink: 0;
+            padding: 8px;
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+
+        .converter-row {
+            flex: 1;
+        }
+
         @media (max-width: 480px) {
             body {
                 padding: 10px;
@@ -169,6 +199,16 @@
             .tab {
                 font-size: 14px;
                 padding: 8px 12px;
+            }
+            
+            .converter-inputs {
+                flex-direction: column;
+            }
+            
+            .converter-inputs button {
+                transform: rotate(90deg);
+                margin: 10px auto;
+                width: 40px;
             }
         }
     </style>
@@ -196,13 +236,35 @@
                 <label>自定義匯率：</label>
                 <input type="number" id="exchangeRate" value="160000">
             </div>
-
-            <div class="input-group">
-                <label>台幣金額：</label>
-                <input type="number" id="twdAmount" placeholder="請輸入金額">
+            
+            <div class="converter-toggle">
+                <label>
+                    <input type="radio" name="convertDirection" value="twdToGame" checked onchange="updateConverterUI()">
+                    台幣轉遊戲幣
+                </label>
+                <label>
+                    <input type="radio" name="convertDirection" value="gameToTwd" onchange="updateConverterUI()">
+                    遊戲幣轉台幣
+                </label>
             </div>
 
-            <button onclick="calculateCurrency()">計算遊戲幣</button>
+            <div class="converter-inputs">
+                <div class="converter-row">
+                    <div class="input-group">
+                        <label id="amountLabel">台幣金額：</label>
+                        <input type="number" id="amountInput" placeholder="請輸入金額">
+                    </div>
+                </div>
+                <button onclick="swapConversion()">⇄</button>
+                <div class="converter-row">
+                    <div class="input-group">
+                        <label id="resultLabel">遊戲幣金額：</label>
+                        <input type="number" id="resultInput" placeholder="計算結果" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="calculateCurrency()">計算匯率</button>
             <div id="currencyResult" class="result"></div>
 
             <div class="notice">
@@ -286,22 +348,62 @@
             const customRateInput = document.getElementById('customRateInput');
             customRateInput.style.display = document.getElementById('customRateToggle').checked ? 'block' : 'none';
         }
+        
+        function updateConverterUI() {
+            const direction = document.querySelector('input[name="convertDirection"]:checked').value;
+            const amountLabel = document.getElementById('amountLabel');
+            const resultLabel = document.getElementById('resultLabel');
+            
+            if (direction === 'twdToGame') {
+                amountLabel.textContent = '台幣金額：';
+                resultLabel.textContent = '遊戲幣金額：';
+            } else {
+                amountLabel.textContent = '遊戲幣金額：';
+                resultLabel.textContent = '台幣金額：';
+            }
+            
+            // 清空輸入和結果
+            document.getElementById('amountInput').value = '';
+            document.getElementById('resultInput').value = '';
+            document.getElementById('currencyResult').style.display = 'none';
+        }
+        
+        function swapConversion() {
+            const currentDirection = document.querySelector('input[name="convertDirection"]:checked').value;
+            const newDirection = currentDirection === 'twdToGame' ? 'gameToTwd' : 'twdToGame';
+            
+            document.querySelector(`input[name="convertDirection"][value="${newDirection}"]`).checked = true;
+            updateConverterUI();
+        }
 
         function calculateCurrency() {
-            const amount = parseFloat(document.getElementById('twdAmount').value);
+            const amount = parseFloat(document.getElementById('amountInput').value);
             const rate = document.getElementById('customRateToggle').checked 
                 ? parseFloat(document.getElementById('exchangeRate').value)
                 : 1000000;
+            const direction = document.querySelector('input[name="convertDirection"]:checked').value;
                 
             if (isNaN(amount) || amount <= 0) {
                 alert('請輸入有效金額');
                 return;
             }
             
-            const totalCurrency = Math.floor(amount * rate);
+            let totalCurrency, resultText;
+            
+            if (direction === 'twdToGame') {
+                // 台幣轉遊戲幣
+                totalCurrency = Math.floor(amount * rate);
+                resultText = `${amount.toLocaleString()} 台幣 = ${totalCurrency.toLocaleString()} 遊戲幣`;
+                document.getElementById('resultInput').value = totalCurrency;
+            } else {
+                // 遊戲幣轉台幣
+                totalCurrency = Math.floor((amount / rate) * 100) / 100; // 保留兩位小數
+                resultText = `${amount.toLocaleString()} 遊戲幣 = ${totalCurrency.toLocaleString()} 台幣`;
+                document.getElementById('resultInput').value = totalCurrency;
+            }
             
             const resultDiv = document.getElementById('currencyResult');
-            resultDiv.textContent = `${amount.toLocaleString()} 台幣 = ${totalCurrency.toLocaleString()} 遊戲幣`;
+            resultDiv.textContent = resultText;
             resultDiv.style.display = 'block';
         }
 
@@ -401,6 +503,9 @@
             resultDiv.innerHTML = message;
             resultDiv.style.display = 'block';
         }
+        
+        // 初始化頁面
+        updateConverterUI();
     </script>
 </body>
 </html>
