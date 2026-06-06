@@ -2,798 +2,1809 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>新瑪奇計算器</title>
   <style>
-    /* ========== 基礎設定 ========== */
+    :root {
+      --bg: #1e1815;
+      --bg-2: #2a221e;
+      --paper: rgba(42, 34, 30, 0.9);
+      --paper-strong: rgba(49, 40, 35, 0.96);
+      --panel: rgba(63, 52, 46, 0.82);
+      --line: #5a4a41;
+      --line-strong: #8d7668;
+      --ink: #f0e7dc;
+      --muted: #c2b2a2;
+      --accent: #d0b49b;
+      --accent-soft: #4a3c34;
+      --accent-deep: #f6e6d5;
+      --sage: #a8c1ac;
+      --shadow: 0 22px 56px rgba(0, 0, 0, 0.32);
+      --grid-line: rgba(255, 255, 255, 0.08);
+      --grid-line-soft: rgba(255, 255, 255, 0.05);
+      --switch-track: #645346;
+      --switch-track-active: #b89c84;
+      --switch-knob: #f5eadc;
+      --tab-bg: rgba(63, 52, 46, 0.56);
+      --input-bg: rgba(88, 73, 64, 0.56);
+      --input-focus-bg: rgba(99, 82, 72, 0.72);
+      --empty-bg: rgba(77, 64, 56, 0.45);
+      --sage-bg: rgba(168, 193, 172, 0.12);
+      --white-soft: rgba(255, 255, 255, 0.08);
+      --text-on-accent: #241c18;
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --font-ui: "Yu Gothic UI", "Segoe UI", "Microsoft JhengHei UI", "Microsoft JhengHei", sans-serif;
+      --font-display: "BiauKai", "DFKai-SB", "STKaiti", "Noto Serif TC", serif;
+      --transition: 160ms ease;
+    }
+
+    body.light-mode {
+      --bg: #faf6f0;
+      --bg-2: #f0e5d7;
+      --paper: rgba(255, 252, 248, 0.94);
+      --paper-strong: rgba(255, 251, 246, 0.98);
+      --panel: rgba(248, 241, 232, 0.92);
+      --line: #d7c8b7;
+      --line-strong: #baa58e;
+      --ink: #332922;
+      --muted: #746456;
+      --accent: #7a5842;
+      --accent-soft: #eadccf;
+      --accent-deep: #5c4333;
+      --sage: #6f8673;
+      --shadow: 0 20px 50px rgba(100, 72, 46, 0.09);
+      --grid-line: rgba(255, 255, 255, 0.12);
+      --grid-line-soft: rgba(255, 255, 255, 0.08);
+      --switch-track: #dfd0bf;
+      --switch-track-active: #92725b;
+      --switch-knob: #fffdf9;
+      --tab-bg: rgba(255, 251, 246, 0.8);
+      --input-bg: rgba(255, 255, 255, 0.76);
+      --input-focus-bg: rgba(255, 255, 255, 0.95);
+      --empty-bg: rgba(244, 236, 225, 0.5);
+      --sage-bg: rgba(111, 134, 115, 0.09);
+      --white-soft: rgba(255, 255, 255, 0.76);
+      --text-on-accent: #fffaf4;
+    }
+
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
       margin: 0;
-      padding: 0;
-      transition: background-color .3s, color .3s, border-color .3s, transform .2s ease;
-    }
-
-    :root{
-      /* 秋季主色盤 */
-      --bg: #fff8f0;                 /* 米白底 */
-      --bg-accent: #ffedd8;          /* 米杏點綴 */
-      --ink: #47372a;                /* 墨咖啡字色 */
-      --muted: #7c6a58;              /* 次要字色 */
-      --primary: #d2691e;            /* 深楓葉橘 */
-      --primary-2: #ff9a3d;          /* 亮橙 */
-      --primary-3: #a0522d;          /* 深棕 */
-      --ring: rgba(210,105,30,.25);  /* 焦點外光暈 */
-      --card: #ffffff;               /* 卡片 */
-      --input: #ecd8c7;              /* 輕描邊框 */
-      --soft: #f7e7d6;               /* 區塊底 */
-      --shadow: 0 10px 35px rgba(160, 82, 45,.10);
-      --radius: 14px;
-    }
-
-    /* 深色模式（也做成秋色系） */
-    .dark-mode{
-      --bg: #1b1613;
-      --bg-accent: #221b16;
-      --ink: #f2e9e1;
-      --muted: #c7b6a6;
-      --primary: #ff9a3d;
-      --primary-2: #ffd39a;
-      --primary-3: #e37b2f;
-      --card: #2a221d;
-      --input: #3a2f28;
-      --soft: #342a24;
-      --ring: rgba(255,154,61,.25);
-      --shadow: 0 10px 35px rgba(0,0,0,.35);
-    }
-
-    html, body{
-      height: 100%;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+      min-height: 100vh;
+      font-family: var(--font-ui);
+      font-size: 17px;
       color: var(--ink);
       background:
-        radial-gradient(1200px 600px at 10% -10%, var(--bg-accent), transparent 70%),
-        radial-gradient(1000px 500px at 110% 10%, var(--bg-accent), transparent 70%),
-        var(--bg);
-      line-height: 1.65;
-      padding: 28px;
-      overflow-x: hidden;
+        radial-gradient(circle at top left, rgba(190, 165, 136, 0.24), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(160, 135, 109, 0.12), transparent 18%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      transition: background-color var(--transition), color var(--transition);
     }
 
-    /* ========== 秋葉飄落（背景演出，低干擾） ========== */
-    .leaf-layer{
+    body::before {
+      content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.0), rgba(0,0,0,.15) 10%, rgba(0,0,0,.6) 40%, rgba(0,0,0,.9));
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line-soft) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.18;
+      mask-image: radial-gradient(circle at center, black 28%, transparent 90%);
     }
 
-    .leaf{
-      position: absolute;
-      top: -8vh;
-      font-size: clamp(10px, 2.2vw, 20px);
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,.15));
-      opacity: .8;
-      animation: fall linear var(--dur) var(--delay) infinite;
-    }
-
-    /* 使用三種顏色小圓片（CSS 繪製）避免表情符號風格差異 */
-    .leaf::before{
+    body::after {
       content: "";
-      display: block;
-      width: 1em;
-      height: .85em;
-      border-radius: 60% 60% 60% 0;
-      background: var(--leaf-color, #d2691e);
-      transform: rotate(var(--rot, -20deg));
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 14% 16%, rgba(255, 255, 255, 0.16) 0 2px, transparent 3px),
+        radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 68%, rgba(255, 255, 255, 0.12) 0 2px, transparent 3px),
+        radial-gradient(circle at 82% 76%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px),
+        radial-gradient(circle at 48% 36%, rgba(89, 65, 45, 0.1), transparent 42%),
+        radial-gradient(circle at 68% 62%, rgba(89, 65, 45, 0.08), transparent 36%),
+        linear-gradient(100deg, rgba(255, 255, 255, 0.08) 0%, transparent 24%, rgba(112, 83, 58, 0.12) 48%, transparent 72%, rgba(255, 255, 255, 0.05) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(94, 70, 51, 0.1));
+      background-size:
+        220px 220px,
+        280px 280px,
+        260px 260px,
+        320px 320px,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%;
+      mix-blend-mode: multiply;
+      opacity: 0.72;
+      filter: contrast(1.05) saturate(0.92);
     }
 
-    @keyframes fall{
-      0%{
-        transform: translate3d(var(--x, 0vw), -10vh, 0) rotate(0deg);
-      }
-      50%{
-        transform: translate3d(calc(var(--x, 0vw) + 6vw), 50vh, 0) rotate(180deg);
-      }
-      100%{
-        transform: translate3d(calc(var(--x, 0vw) - 4vw), 110vh, 0) rotate(360deg);
-      }
+    button,
+    input,
+    select {
+      font: inherit;
     }
 
-    /* ========== 容器與區塊 ========== */
-    .container{
+    .page {
       position: relative;
       z-index: 1;
-      max-width: 900px;
+      max-width: 1120px;
       margin: 0 auto;
-      background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.9)) , var(--card);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border: 1px solid rgba(160,82,45,.12);
-      border-radius: calc(var(--radius) + 6px);
+      padding: 28px 18px 40px;
+    }
+
+    .layout {
+      display: block;
+    }
+
+    .topbar,
+    .studio {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .topbar {
+      border-radius: var(--radius-xl);
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .theme-line {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+
+    .theme-line strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-align: right;
+    }
+
+    .theme-line span {
+      display: block;
+      margin-top: 4px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 88px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--switch-track);
+      transition: var(--transition);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--switch-knob);
+      box-shadow: 0 2px 8px rgba(78, 56, 38, 0.14);
+      transition: transform var(--transition);
+    }
+
+    .slider::after {
+      content: "OFF";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(255, 250, 244, 0.78);
+      transition: var(--transition);
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(46px);
+    }
+
+    .switch input:checked + .slider {
+      background: var(--switch-track-active);
+    }
+
+    .switch input:checked + .slider::after {
+      content: "ON";
+      right: 46px;
+      color: var(--text-on-accent);
+    }
+
+    .studio {
+      border-radius: 34px;
+      padding: 20px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: var(--tab-bg);
+      color: var(--ink);
+      border-radius: 18px;
+      padding: 16px 18px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform var(--transition), border-color var(--transition), background-color var(--transition), box-shadow var(--transition);
+    }
+
+    .tab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 20px rgba(92, 67, 51, 0.05);
+    }
+
+    .tab.active {
+      background: var(--accent-soft);
+      border-color: var(--line-strong);
+    }
+
+    .tab strong,
+    .tab span {
+      display: block;
+    }
+
+    .tab strong {
+      margin-bottom: 5px;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .tab span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .calculator {
+      display: none;
+    }
+
+    .calculator.active {
+      display: block;
+      animation: fadeUp 180ms ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .calculator-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 18px;
+    }
+
+    .editorial,
+    .result-column {
+      display: grid;
+      gap: 16px;
+    }
+
+    .section-card,
+    .result-card,
+    .note-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--paper-strong);
       box-shadow: var(--shadow);
       padding: 22px;
     }
 
-    .header{
+    .section-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .section-head h2,
+    .note-card h3,
+    .result-card h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .section-head h2 {
+      font-size: 32px;
+    }
+
+    .section-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 16px;
+      max-width: 40rem;
+    }
+
+    .section-badge {
+      flex-shrink: 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(122, 88, 66, 0.1);
+      color: var(--accent);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+
+    .field-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
-      margin-bottom: 18px;
     }
 
-    h1{
-      font-size: clamp(22px, 2.4vw, 28px);
-      letter-spacing: .5px;
-      font-weight: 800;
-      background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .field {
+      display: grid;
+      gap: 9px;
     }
 
-    /* ========== 機制元件 ========== */
-    .switch{
-      position: relative;
-      width: 64px; height: 34px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, var(--soft), var(--input));
-      box-shadow: inset 0 2px 6px rgba(0,0,0,.06);
-      cursor: pointer;
-    }
-    .switch input{ opacity: 0; width: 0; height: 0; }
-    .slider{
-      position: absolute; inset: 4px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, var(--bg), var(--soft));
-    }
-    .slider::before{
-      content:"";
-      position: absolute; left: 3px; top: 3px;
-      width: 24px; height: 24px; border-radius: 50%;
-      background: linear-gradient(180deg, #fff, #f5ede6);
-      box-shadow: 0 2px 8px rgba(0,0,0,.12);
-      transition: transform .35s cubic-bezier(.22,1,.36,1);
-    }
-    input:checked + .slider::before{ transform: translateX(26px); }
-    .theme-switch{ display:flex; align-items:center; gap:10px; color:var(--muted); font-size:14px; }
-
-    /* ========== Tabs ========== */
-    .tabs{
-      display:flex; gap:10px; margin-bottom: 18px;
-      background: linear-gradient(180deg, rgba(255,154,61,.08), transparent 60%);
-      padding: 8px;
-      border-radius: calc(var(--radius) + 2px);
-    }
-    .tab{
-      flex:1;
-      border: 1px solid transparent;
-      background: linear-gradient(180deg, #fff, #fff6ee);
-      color: var(--ink);
-      padding: 10px 16px;
-      border-radius: var(--radius);
-      font-size: 15px;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(210,105,30,.10);
-      transform: translateY(0);
-    }
-    .tab:hover{ transform: translateY(-1px); }
-    .tab.active{
-      color: #fff;
-      background: linear-gradient(180deg, var(--primary), var(--primary-3));
-      box-shadow: 0 8px 20px rgba(210,105,30,.25);
+    .field label,
+    .radio-card small,
+    .option-line span {
+      color: var(--muted);
     }
 
-    /* ========== 內容區 ========== */
-    .calculator{ display:none; }
-    .calculator.active{ display:block; animation: fadeInUp .35s ease both; }
-    @keyframes fadeInUp{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    h2{
-      font-size: 18px; margin-bottom: 14px; font-weight: 700;
-      color: var(--ink);
-    }
-
-    .input-group{ margin-bottom: 14px; }
-    label{ display:block; margin-bottom:6px; color:var(--muted); font-size: 14px; }
-
-    input[type="number"], select{
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--input);
-      border-radius: 12px;
-      background: #fff;
-      color: var(--ink);
+    .field label {
       font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: var(--input-bg);
+      color: var(--ink);
+      font-size: 17px;
       outline: none;
-      box-shadow: 0 2px 0 #00000003;
-    }
-    input[type="number"]:focus, select:focus{
-      border-color: var(--primary);
-      box-shadow: 0 0 0 6px var(--ring);
+      transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
     }
 
-    .option-switch,
-    .converter-toggle,
-    .format-toggle{ margin: 10px 0 14px; color: var(--muted); }
-
-    .converter-inputs{
-      display:flex; gap:10px; align-items: stretch;
-    }
-    .converter-row{ flex:1; }
-
-    .swap-btn{
-      margin-top: 24px;
-      width: 44px; height: 44px; flex-shrink:0;
-      border-radius: 12px;
-      border: 1px solid var(--input);
-      background: linear-gradient(180deg, #fff, #fff6ee);
-      font-size: 18px; cursor:pointer;
-    }
-    .swap-btn:hover{ transform: rotate(90deg); }
-
-    button.action{
-      background: linear-gradient(180deg, var(--primary-2), var(--primary));
-      color: #fff;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-      box-shadow: 0 8px 18px rgba(210,105,30,.25);
-      margin-top: 4px;
-    }
-    button.action:hover{ transform: translateY(-1px) scale(1.01); }
-    button.action:active{ transform: translateY(0) scale(.995); }
-
-    .result{
-      padding: 16px 14px;
-      background: linear-gradient(180deg, #fff, var(--soft));
-      border-radius: 12px;
-      border-left: 4px solid var(--primary);
-      box-shadow: 0 6px 18px rgba(210,105,30,.10);
-      margin-top: 12px;
-      font-size: 16px;
-      color: var(--ink);
-      display:none;
-      white-space: pre-line;
-      animation: fadeInUp .35s ease both;
+    input[type="number"]::placeholder {
+      color: var(--muted);
+      opacity: 0.78;
     }
 
-    .notice{
-      margin-top: 14px;
-      padding: 12px 14px;
-      background: linear-gradient(180deg, var(--bg-accent), transparent 60%);
-      border: 1px dashed rgba(210,105,30,.25);
-      border-radius: 12px;
-      font-size: 13px; color: var(--muted);
+    input[type="number"]:focus,
+    select:focus {
+      border-color: var(--line-strong);
+      box-shadow: 0 0 0 4px rgba(186, 165, 142, 0.16);
+      background: var(--input-focus-bg);
     }
 
-    .formula{ color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
-    .result-value{
-      color: var(--primary);
-      font-weight: 900;
-      letter-spacing: .4px;
-    }
-
-    .section{
-      margin-bottom: 14px;
+    .option-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
       padding: 14px;
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid var(--input);
-    }
-    .section h2{ margin-bottom:8px; }
-
-    .chinese-format{
-      color: var(--primary);
-      font-weight: 800;
-      padding: 6px 2px;
-      letter-spacing: .4px;
-      display:none;
-      animation: fadeInUp .35s ease both;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--panel);
     }
 
-    /* 行動裝置 */
-    @media (max-width: 520px){
-      body{ padding: 18px; }
-      .converter-inputs{ flex-direction: column; }
-      .swap-btn{ width: 100%; height: 40px; margin: 0 0 4px; }
+    .option-line input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: 3px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+    }
+
+    .option-line strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .option-line span {
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .mini-calc {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+    }
+
+    .mini-calc-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mini-calc-head strong {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: var(--ink);
+    }
+
+    .mini-calc-head span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .mini-calc-display {
+      width: 100%;
+      min-height: 60px;
+      padding: 14px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: var(--paper-strong);
+      color: var(--accent-deep);
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 22px;
+      text-align: right;
+      letter-spacing: 0.02em;
+    }
+
+    .mini-calc-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .mini-calc-target {
+      display: grid;
+      gap: 8px;
+    }
+
+    .mini-calc-target label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .mini-calc-apply {
+      min-width: 132px;
+      height: 50px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform var(--transition), background-color var(--transition), border-color var(--transition);
+    }
+
+    .mini-calc-apply:hover,
+    .mini-calc-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .mini-calc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini-calc-unit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini-calc-btn {
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--input-bg);
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform var(--transition), background-color var(--transition), border-color var(--transition);
+    }
+
+    .mini-calc-btn.operator {
+      background: var(--accent-soft);
+    }
+
+    .mini-calc-btn.utility {
+      background: rgba(111, 134, 115, 0.16);
+      color: var(--sage);
+    }
+
+    .mini-calc-btn.equals {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: var(--text-on-accent);
+    }
+
+    .mini-calc-btn.unit {
+      background: rgba(208, 180, 155, 0.18);
+      color: var(--accent-deep);
+    }
+
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .radio-card {
+      position: relative;
+      display: block;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--input-bg);
+      cursor: pointer;
+      transition: border-color var(--transition), background-color var(--transition), transform var(--transition);
+    }
+
+    .radio-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .radio-card input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .radio-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: var(--ink);
+    }
+
+    .radio-card small {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .radio-card.is-selected {
+      border-color: var(--line-strong);
+      background: var(--accent-soft);
+    }
+
+    .converter-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);
+      gap: 12px;
+      align-items: end;
+    }
+
+    .swap-btn,
+    .action {
+      border: 0;
+      cursor: pointer;
+      transition: transform var(--transition), filter var(--transition), box-shadow var(--transition);
+    }
+
+    .swap-btn {
+      height: 50px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--accent-deep);
+      font-size: 18px;
+    }
+
+    .swap-btn:hover,
+    .action:hover {
+      transform: translateY(-1px);
+    }
+
+    .action {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: var(--text-on-accent);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      box-shadow: 0 14px 24px rgba(92, 67, 51, 0.15);
+    }
+
+    .result-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .result-top h3 {
+      font-size: 21px;
+    }
+
+    .result-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--sage-bg);
+      color: var(--sage);
+      font-size: 13px;
+    }
+
+    .result-empty,
+    .result-box,
+    .chinese-format {
+      border-radius: var(--radius-lg);
+      padding: 18px;
+    }
+
+    .result-empty {
+      min-height: 132px;
+      display: flex;
+      align-items: center;
+      border: 1px dashed var(--line-strong);
+      background: var(--empty-bg);
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .result-box {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      line-height: 1.8;
+    }
+
+    .result-box p,
+    .auction-summary p {
+      margin: 0 0 10px;
+    }
+
+    .result-box p:last-child,
+    .auction-summary p:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-number {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 36px);
+      font-weight: 600;
+      line-height: 1.12;
+      color: var(--accent-deep);
+      word-break: break-word;
+    }
+
+    .muted-line {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .chinese-format {
+      display: none;
+      border: 1px solid rgba(111, 134, 115, 0.28);
+      background: var(--sage-bg);
+      color: var(--sage);
+      white-space: pre-line;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .note-card {
+      display: grid;
+      gap: 10px;
+    }
+
+    .note-card h3 {
+      font-size: 20px;
+    }
+
+    .note-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .auction-summary {
+      display: grid;
+      gap: 12px;
+    }
+
+    .auction-card {
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--input-bg);
+    }
+
+    .auction-card h4 {
+      margin: 0 0 10px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .formula {
+      font-family: Consolas, "Courier New", monospace;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 860px) {
+      .tabs,
+      .calculator-shell,
+      .field-grid,
+      .radio-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .converter-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-calc-tools {
+        grid-template-columns: 1fr;
+      }
+
+      .swap-btn {
+        width: 100%;
+      }
+
+      .mini-calc-apply {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 16px 12px 28px;
+      }
+
+      .topbar,
+      .section-card,
+      .result-card,
+      .note-card,
+      .studio {
+        padding: 18px;
+      }
+
+      .hero,
+      .section-head,
+      .result-top {
+        display: grid;
+      }
+
+      .section-head {
+        gap: 10px;
+      }
+
+      .theme-line {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .theme-line strong,
+      .theme-line span {
+        text-align: left;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- 背景秋葉 -->
-  <div class="leaf-layer" aria-hidden="true" id="leafLayer"></div>
-
-  <div class="container">
-    <div class="header">
-      <h1>新瑪奇計算器</h1>
-      <div class="theme-switch">
-        <span>暗色模式</span>
-        <label class="switch">
-          <input type="checkbox" id="darkModeToggle" />
-          <span class="slider"></span>
-        </label>
-      </div>
-    </div>
-
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab(event,'currency')">遊戲幣計算器</button>
-      <button class="tab" onclick="switchTab(event,'bank')">銀行交易計算器</button>
-      <button class="tab" onclick="switchTab(event,'auction')">拍賣手續費計算</button>
-    </div>
-
-    <!-- 遊戲幣計算器 -->
-    <div id="currency" class="calculator active">
-      <h2>新瑪奇遊戲幣計算器</h2>
-
-      <div class="option-switch">
-        <label>
-          <input type="checkbox" id="customRateToggle" onchange="toggleCustomRate()"/>
-          自定義匯率
-        </label>
-      </div>
-
-      <div id="customRateInput" class="input-group" style="display:none;">
-        <label>自定義匯率：</label>
-        <input type="number" id="exchangeRate" value="160000" />
-      </div>
-
-      <div class="converter-toggle">
-        <label>
-          <input type="radio" name="convertDirection" value="twdToGame" checked onchange="updateConverterUI()"/>
-          台幣轉遊戲幣
-        </label>
-        &emsp;
-        <label>
-          <input type="radio" name="convertDirection" value="gameToTwd" onchange="updateConverterUI()"/>
-          遊戲幣轉台幣
-        </label>
-      </div>
-
-      <div class="converter-inputs">
-        <div class="converter-row">
-          <div class="input-group">
-            <label id="amountLabel">台幣金額：</label>
-            <input type="number" id="amountInput" placeholder="請輸入金額" />
+  <main class="page">
+    <div class="layout">
+      <div class="topbar">
+        <div class="theme-line">
+          <div>
+            <strong>主題模式</strong>
+            <span>切換深色或淺色紙本主題</span>
           </div>
-        </div>
-        <button class="swap-btn" onclick="swapConversion()" title="切換方向">⇄</button>
-        <div class="converter-row">
-          <div class="input-group">
-            <label id="resultLabel">遊戲幣金額：</label>
-            <input type="number" id="resultInput" placeholder="計算結果" readonly />
-          </div>
+          <label class="switch" aria-label="切換主題">
+            <input type="checkbox" id="darkModeToggle" />
+            <span class="slider"></span>
+          </label>
         </div>
       </div>
 
-      <button class="action" onclick="calculateCurrency()">計算匯率</button>
-      <div id="currencyResult" class="result"></div>
-      <div id="chineseFormatResult" class="chinese-format"></div>
+      <section class="studio">
+        <div class="tabs" role="tablist" aria-label="計算器功能">
+          <button class="tab active" type="button" onclick="switchTab(event, 'currency')" role="tab" aria-selected="true">
+            <strong>遊戲幣計算器</strong>
+            <span>雙向換算與匯率設定</span>
+          </button>
+          <button class="tab" type="button" onclick="switchTab(event, 'bank')" role="tab" aria-selected="false">
+            <strong>銀行交易計算器</strong>
+            <span>手續費與交易結果</span>
+          </button>
+          <button class="tab" type="button" onclick="switchTab(event, 'auction')" role="tab" aria-selected="false">
+            <strong>拍賣手續費計算</strong>
+            <span>不同類型物品收益比較</span>
+          </button>
+        </div>
 
-      <div class="format-toggle">
-        <label>
-          <input type="checkbox" id="chineseFormatToggle" onchange="toggleChineseFormat()"/>
-          顯示中文數字格式（萬／億／兆／京）
-        </label>
-      </div>
+        <section id="currency" class="calculator active" role="tabpanel">
+          <div class="calculator-shell">
+            <div class="editorial">
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <h2>遊戲幣換算</h2>
+                    <p>提供台幣與遊戲幣之間的雙向換算，並支援自訂匯率設定。</p>
+                  </div>
+                  <div class="section-badge">換算</div>
+                </div>
 
-      <div class="notice">
-        ‧ 預設匯率為 1 台幣 = 1,000,000 遊戲幣<br/>
-        ‧ 自定義匯率預設值為 1 台幣 = 160,000 遊戲幣<br/>
-        ‧ 中文數字格式使用「萬、億、兆、京」單位
-      </div>
+                <div class="field-stack">
+                  <div id="customRateInput" class="field">
+                    <label for="exchangeRate">自訂匯率（1 台幣對應多少遊戲幣）</label>
+                    <input type="number" id="exchangeRate" value="160000" />
+                  </div>
+
+                  <div class="field">
+                    <label>轉換方向</label>
+                    <div class="radio-grid">
+                      <label class="radio-card is-selected">
+                        <input type="radio" name="convertDirection" value="twdToGame" checked onchange="updateConverterUI()" />
+                        <strong>台幣轉遊戲幣</strong>
+                        <small>依輸入台幣金額換算對應遊戲幣數值</small>
+                      </label>
+                      <label class="radio-card">
+                        <input type="radio" name="convertDirection" value="gameToTwd" onchange="updateConverterUI()" />
+                        <strong>遊戲幣轉台幣</strong>
+                        <small>依輸入遊戲幣數值換算對應台幣金額</small>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="converter-layout">
+                    <div class="field">
+                      <label id="amountLabel" for="amountInput">台幣金額</label>
+                      <input type="number" id="amountInput" placeholder="請輸入金額" />
+                    </div>
+                    <button class="swap-btn" type="button" onclick="swapConversion()" title="切換方向">⇄</button>
+                    <div class="field">
+                      <label id="resultLabel" for="resultInput">遊戲幣金額</label>
+                      <input type="number" id="resultInput" placeholder="計算結果" readonly />
+                    </div>
+                  </div>
+
+                  <button class="action" type="button" onclick="calculateCurrency()">計算匯率</button>
+
+                  <div class="mini-calc" data-calculator="currencyCalc">
+                    <div class="mini-calc-head">
+                      <div>
+                        <strong>小計算機</strong>
+                        <span>可先行計算數值，再寫入指定欄位。</span>
+                      </div>
+                    </div>
+                    <input class="mini-calc-display" id="currencyCalcDisplay" value="0" readonly />
+                    <div class="mini-calc-tools">
+                      <div class="mini-calc-target">
+                        <label for="currencyCalcTarget">帶入欄位</label>
+                        <select id="currencyCalcTarget">
+                          <option value="amountInput">換算金額</option>
+                          <option value="exchangeRate">自訂匯率</option>
+                        </select>
+                      </div>
+                      <button class="mini-calc-apply" type="button" onclick="applyCalculatorValue('currencyCalc')">帶入欄位</button>
+                    </div>
+                    <div class="mini-calc-grid">
+                      <button class="mini-calc-btn utility" type="button" onclick="calculatorInput('currencyCalc','clear')">C</button>
+                      <button class="mini-calc-btn utility" type="button" onclick="calculatorInput('currencyCalc','backspace')">Del</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('currencyCalc','÷')">÷</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('currencyCalc','×')">×</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','7')">7</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','8')">8</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','9')">9</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('currencyCalc','-')">−</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','4')">4</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','5')">5</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','6')">6</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('currencyCalc','+')">＋</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','1')">1</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','2')">2</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','3')">3</button>
+                      <button class="mini-calc-btn equals" type="button" onclick="calculatorInput('currencyCalc','=')">=</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','0')">0</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('currencyCalc','00')">00</button>
+                    </div>
+                    <div class="mini-calc-unit-grid">
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('currencyCalc', 1000)">千</button>
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('currencyCalc', 10000)">萬</button>
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('currencyCalc', 100000000)">億</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-column">
+              <div class="result-card">
+                <div class="result-top">
+                  <h3>換算結果</h3>
+                  <div class="result-chip">結果</div>
+                </div>
+                <div id="currencyResult" class="result-empty">此區顯示換算結果、套用匯率與相關數值資訊。</div>
+                <div id="chineseFormatResult" class="chinese-format"></div>
+                <div class="option-line">
+                  <input type="checkbox" id="chineseFormatToggle" onchange="toggleChineseFormat()" />
+                  <div>
+                    <strong>顯示原始數字</strong>
+                    <span>於附加資訊區顯示不含千分位符號的原始數值。</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="note-card">
+                <h3>說明</h3>
+                <p>預設匯率為 1 台幣 = 1,000,000 遊戲幣。</p>
+                <p>切換換算方向時，輸入欄位與結果欄位會同步清除。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="bank" class="calculator" role="tabpanel">
+          <div class="calculator-shell">
+            <div class="editorial">
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <h2>銀行交易計算</h2>
+                    <p>提供銀行交易類型、金額與折扣條件的手續費與最終金額計算。</p>
+                  </div>
+                  <div class="section-badge">銀行</div>
+                </div>
+
+                <div class="field-stack">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label for="transactionType">交易類型</label>
+                      <select id="transactionType">
+                        <option value="cashDeposit">現金存入銀行</option>
+                        <option value="cashWithdraw">現金提取銀行</option>
+                        <option value="checkIssue">支票開立</option>
+                        <option value="checkDeposit">支票存入銀行</option>
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label for="bankAmount">交易金額</label>
+                      <input type="number" id="bankAmount" placeholder="請輸入金額" />
+                    </div>
+                  </div>
+
+                  <div class="option-line">
+                    <input type="checkbox" id="wednesdayDiscount" />
+                  <div>
+                    <strong>套用禮拜三折扣</strong>
+                    <span>現金存入適用 7.5%，支票開立適用 3.75%。</span>
+                  </div>
+                </div>
+
+                  <button class="action" type="button" onclick="calculateBank()">計算交易</button>
+
+                  <div class="mini-calc" data-calculator="bankCalc">
+                    <div class="mini-calc-head">
+                      <div>
+                        <strong>小計算機</strong>
+                        <span>可先行計算數值，再寫入交易金額欄位。</span>
+                      </div>
+                    </div>
+                    <input class="mini-calc-display" id="bankCalcDisplay" value="0" readonly />
+                    <div class="mini-calc-tools">
+                      <div class="mini-calc-target">
+                        <label for="bankCalcTarget">帶入欄位</label>
+                        <select id="bankCalcTarget">
+                          <option value="bankAmount">交易金額</option>
+                        </select>
+                      </div>
+                      <button class="mini-calc-apply" type="button" onclick="applyCalculatorValue('bankCalc')">帶入欄位</button>
+                    </div>
+                    <div class="mini-calc-grid">
+                      <button class="mini-calc-btn utility" type="button" onclick="calculatorInput('bankCalc','clear')">C</button>
+                      <button class="mini-calc-btn utility" type="button" onclick="calculatorInput('bankCalc','backspace')">Del</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('bankCalc','÷')">÷</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('bankCalc','×')">×</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','7')">7</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','8')">8</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','9')">9</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('bankCalc','-')">−</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','4')">4</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','5')">5</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','6')">6</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('bankCalc','+')">＋</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','1')">1</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','2')">2</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','3')">3</button>
+                      <button class="mini-calc-btn equals" type="button" onclick="calculatorInput('bankCalc','=')">=</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','0')">0</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('bankCalc','00')">00</button>
+                    </div>
+                    <div class="mini-calc-unit-grid">
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('bankCalc', 1000)">千</button>
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('bankCalc', 10000)">萬</button>
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('bankCalc', 100000000)">億</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-column">
+              <div class="result-card">
+                <div class="result-top">
+                  <h3>交易結果</h3>
+                  <div class="result-chip">明細</div>
+                </div>
+                <div id="bankResult" class="result-empty">此區顯示手續費、套用費率與最終交易金額。</div>
+                <div id="bankChineseResult" class="chinese-format"></div>
+                <div class="option-line">
+                  <input type="checkbox" id="bankChineseToggle" onchange="toggleBankChineseFormat()" />
+                  <div>
+                    <strong>顯示原始數字</strong>
+                    <span>於附加資訊區顯示不含千分位符號的原始數值。</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="note-card">
+                <h3>說明</h3>
+                <p>現金存入與支票開立會產生手續費，現金提取與支票存入則不收費。</p>
+                <p>啟用週三折扣時，系統會自動套用折扣後費率重新計算。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="auction" class="calculator" role="tabpanel">
+          <div class="calculator-shell">
+            <div class="editorial">
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <h2>拍賣收益比較</h2>
+                    <p>提供一般物品與生活服務物品的拍賣收益比較，並支援支票手續費計算。</p>
+                  </div>
+                  <div class="section-badge">拍賣</div>
+                </div>
+
+                <div class="field-stack">
+                  <div class="field">
+                    <label for="auctionAmount">拍賣金額</label>
+                    <input type="number" id="auctionAmount" placeholder="請輸入金額" />
+                  </div>
+
+                  <div class="option-line">
+                    <input type="checkbox" id="includeCheckFee" />
+                  <div>
+                    <strong>計算支票手續費</strong>
+                    <span>啟用後將於拍賣手續費扣除後，續計支票手續費。</span>
+                  </div>
+                </div>
+
+                  <button class="action" type="button" onclick="calculateAuctionFee()">計算手續費</button>
+
+                  <div class="mini-calc" data-calculator="auctionCalc">
+                    <div class="mini-calc-head">
+                      <div>
+                        <strong>小計算機</strong>
+                        <span>可先行計算數值，再寫入拍賣金額欄位。</span>
+                      </div>
+                    </div>
+                    <input class="mini-calc-display" id="auctionCalcDisplay" value="0" readonly />
+                    <div class="mini-calc-tools">
+                      <div class="mini-calc-target">
+                        <label for="auctionCalcTarget">帶入欄位</label>
+                        <select id="auctionCalcTarget">
+                          <option value="auctionAmount">拍賣金額</option>
+                        </select>
+                      </div>
+                      <button class="mini-calc-apply" type="button" onclick="applyCalculatorValue('auctionCalc')">帶入欄位</button>
+                    </div>
+                    <div class="mini-calc-grid">
+                      <button class="mini-calc-btn utility" type="button" onclick="calculatorInput('auctionCalc','clear')">C</button>
+                      <button class="mini-calc-btn utility" type="button" onclick="calculatorInput('auctionCalc','backspace')">Del</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('auctionCalc','÷')">÷</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('auctionCalc','×')">×</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','7')">7</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','8')">8</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','9')">9</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('auctionCalc','-')">−</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','4')">4</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','5')">5</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','6')">6</button>
+                      <button class="mini-calc-btn operator" type="button" onclick="calculatorInput('auctionCalc','+')">＋</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','1')">1</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','2')">2</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','3')">3</button>
+                      <button class="mini-calc-btn equals" type="button" onclick="calculatorInput('auctionCalc','=')">=</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','0')">0</button>
+                      <button class="mini-calc-btn" type="button" onclick="calculatorInput('auctionCalc','00')">00</button>
+                    </div>
+                    <div class="mini-calc-unit-grid">
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('auctionCalc', 1000)">千</button>
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('auctionCalc', 10000)">萬</button>
+                      <button class="mini-calc-btn unit" type="button" onclick="calculatorApplyUnit('auctionCalc', 100000000)">億</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-column">
+              <div class="result-card">
+                <div class="result-top">
+                  <h3>收益結果</h3>
+                  <div class="result-chip">比較</div>
+                </div>
+                <div id="auctionResult" class="result-empty">此區顯示一般物品與生活服務物品的最終收益比較結果。</div>
+                <div id="auctionChineseResult" class="chinese-format"></div>
+                <div class="option-line">
+                  <input type="checkbox" id="auctionChineseToggle" onchange="toggleAuctionChineseFormat()" />
+                  <div>
+                    <strong>顯示原始數字</strong>
+                    <span>於附加資訊區顯示不含千分位符號的原始數值。</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="note-card">
+                <h3>說明</h3>
+                <p>一般物品的拍賣費與支票費各為 5%，生活服務物品則各為 4%。</p>
+                <p>開啟支票手續費後，最終金額會在拍賣手續費之後再扣一次同類型費率。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
     </div>
-
-    <!-- 銀行交易計算器 -->
-    <div id="bank" class="calculator">
-      <h2>新瑪奇銀行交易計算器</h2>
-
-      <div class="input-group">
-        <label>交易類型：</label>
-        <select id="transactionType">
-          <option value="cashDeposit">現金存入銀行</option>
-          <option value="cashWithdraw">現金提取銀行</option>
-          <option value="checkIssue">支票開立</option>
-          <option value="checkDeposit">支票存入銀行</option>
-        </select>
-      </div>
-
-      <div class="input-group">
-        <label>交易金額（瑪幣）：</label>
-        <input type="number" id="bankAmount" placeholder="請輸入金額" />
-      </div>
-
-      <div class="option-switch">
-        <label>
-          <input type="checkbox" id="wednesdayDiscount" />
-          禮拜三折扣
-        </label>
-      </div>
-
-      <button class="action" onclick="calculateBank()">計算交易</button>
-      <div id="bankResult" class="result"></div>
-      <div id="bankChineseResult" class="chinese-format"></div>
-
-      <div class="format-toggle">
-        <label>
-          <input type="checkbox" id="bankChineseToggle" onchange="toggleBankChineseFormat()"/>
-          顯示中文數字格式
-        </label>
-      </div>
-
-      <div class="notice">
-        ‧ 現金交易：提取無手續費，存入需扣 10%（週三 7.5%）<br/>
-        ‧ 支票交易：開立需付 5% 手續費（週三 3.75%），存入無手續費
-      </div>
-    </div>
-
-    <!-- 拍賣手續費計算器 -->
-    <div id="auction" class="calculator">
-      <h2>拍賣手續費計算器</h2>
-
-      <div class="option-switch">
-        <label>
-          <input type="checkbox" id="includeCheckFee" />
-          計算支票手續費
-        </label>
-      </div>
-
-      <div class="input-group">
-        <label>拍賣金額（瑪幣）：</label>
-        <input type="number" id="auctionAmount" placeholder="請輸入金額" />
-      </div>
-
-      <button class="action" onclick="calculateAuctionFee()">計算手續費</button>
-      <div id="auctionResult" class="result"></div>
-      <div id="auctionChineseResult" class="chinese-format"></div>
-
-      <div class="format-toggle">
-        <label>
-          <input type="checkbox" id="auctionChineseToggle" onchange="toggleAuctionChineseFormat()"/>
-          顯示中文數字格式
-        </label>
-      </div>
-
-      <div class="notice">
-        ‧ 一般物品：拍賣手續費 5% / 支票手續費 5%<br/>
-        ‧ 生活服務物品：拍賣手續費 4% / 支票手續費 4%<br/>
-        ‧ 若同時使用支票，將依序扣除拍賣手續費與支票手續費
-      </div>
-    </div>
-  </div>
+  </main>
 
   <script>
-    /* ========== 秋葉生成（輕量、效能友善） ========== */
-    (function genLeaves(){
-      const layer = document.getElementById('leafLayer');
-      const count = Math.min(22, Math.floor(window.innerWidth/60));
-      const colors = ['#d2691e', '#ffb347', '#a0522d', '#e07a3f'];
-      for(let i=0;i<count;i++){
-        const s = document.createElement('span');
-        s.className = 'leaf';
-        const x = Math.random()*100;            // vw
-        const dur = 12 + Math.random()*10;      // s
-        const delay = -Math.random()*dur;       // 讓初始就分散
-        const rot = (Math.random()*60-30)+'deg';
-        const color = colors[i%colors.length];
-        s.style.setProperty('--x', x+'vw');
-        s.style.setProperty('--dur', dur+'s');
-        s.style.setProperty('--delay', delay+'s');
-        s.style.setProperty('--rot', rot);
-        s.style.setProperty('--leaf-color', color);
-        layer.appendChild(s);
-      }
-    })();
-
-    /* ========== 主題（深／淺） ========== */
-    function checkThemePreference(){
-      const dark = localStorage.getItem('darkMode');
-      if(dark === 'true'){
-        document.body.classList.add('dark-mode');
-        document.getElementById('darkModeToggle').checked = true;
-      }
-    }
-    function toggleDarkMode(){
-      const on = document.getElementById('darkModeToggle').checked;
-      document.body.classList.toggle('dark-mode', on);
-      localStorage.setItem('darkMode', on ? 'true' : 'false');
-    }
-    document.getElementById('darkModeToggle').addEventListener('change', toggleDarkMode);
-
-    /* ========== Tabs ========== */
-    function switchTab(ev, id){
-      document.querySelectorAll('.calculator').forEach(c=>c.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      ev.currentTarget.classList.add('active');
+    function formatRawNumber(value, digits = 2) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "";
+      if (Number.isInteger(num)) return String(num);
+      return num.toFixed(digits).replace(/\.?0+$/, "");
     }
 
-    /* ========== 工具：數字 => 中文單位 ========== */
-    function formatNumberToChinese(num){
-      if (!isFinite(num)) return '';
-      if (num === 0) return '0';
-      const units = ['', '萬', '億', '兆', '京'];
-      const segments = [];
-      let temp = Math.floor(Math.abs(num));
-      for(let i=0;i<units.length;i++){
-        const seg = temp % 10000;
-        if(seg !== 0 || i === 0){
-          let formatted = '';
-          if(i === 0){
-            formatted = seg === 0 ? '' : String(seg);
-          }else{
-            formatted = String(seg).padStart(4,'0');
-            if(formatted !== '0000') formatted = String(parseInt(formatted,10));
-          }
-          if(formatted) segments.unshift(formatted + units[i]);
+    function formatNumberToChinese(num) {
+      const value = Number(num);
+      if (!Number.isFinite(value)) return "";
+      if (value === 0) return "0";
+
+      const sign = value < 0 ? "-" : "";
+      const abs = Math.abs(value);
+      const units = [
+        { value: 1e16, label: "京" },
+        { value: 1e12, label: "兆" },
+        { value: 1e8, label: "億" },
+        { value: 1e4, label: "萬" }
+      ];
+
+      for (const unit of units) {
+        if (abs >= unit.value) {
+          return `${sign}${formatRawNumber(abs / unit.value)}${unit.label}`;
         }
-        temp = Math.floor(temp/10000);
-        if(temp === 0) break;
       }
-      return (num < 0 ? '－' : '') + segments.join('');
+
+      return `${sign}${formatRawNumber(abs)}`;
     }
 
-    /* ========== 遊戲幣計算器 ========== */
-    function toggleCustomRate(){
-      const box = document.getElementById('customRateInput');
-      box.style.display = document.getElementById('customRateToggle').checked ? 'block' : 'none';
+    function formatCurrencyText(value, suffix) {
+      return `${formatNumberToChinese(value)} ${suffix}`;
     }
 
-    function updateConverterUI(){
-      const dir = document.querySelector('input[name="convertDirection"]:checked').value;
-      document.getElementById('amountLabel').textContent = (dir === 'twdToGame') ? '台幣金額：' : '遊戲幣金額：';
-      document.getElementById('resultLabel').textContent = (dir === 'twdToGame') ? '遊戲幣金額：' : '台幣金額：';
-      // reset
-      document.getElementById('amountInput').value = '';
-      document.getElementById('resultInput').value = '';
-      document.getElementById('currencyResult').style.display = 'none';
-      document.getElementById('chineseFormatResult').style.display = 'none';
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
     }
 
-    function swapConversion(){
-      const now = document.querySelector('input[name="convertDirection"]:checked').value;
-      const next = now === 'twdToGame' ? 'gameToTwd' : 'twdToGame';
+    function setResultHtml(id, html) {
+      const element = document.getElementById(id);
+      element.className = "result-box";
+      element.innerHTML = html;
+    }
+
+    function setEmptyResult(id, text) {
+      const element = document.getElementById(id);
+      element.className = "result-empty";
+      element.textContent = text;
+    }
+
+    function setChineseVisible(id, visible) {
+      document.getElementById(id).style.display = visible ? "block" : "none";
+    }
+
+    const calculatorState = {
+      currencyCalc: "0",
+      bankCalc: "0",
+      auctionCalc: "0"
+    };
+
+    function getCalculatorDisplay(id) {
+      return document.getElementById(`${id}Display`);
+    }
+
+    function setCalculatorDisplay(id) {
+      const display = getCalculatorDisplay(id);
+      display.value = calculatorState[id];
+    }
+
+    function evaluateCalculator(expression) {
+      const normalized = String(expression || "").trim();
+      if (!normalized || !/^[0-9+\-*/().\s]+$/.test(normalized)) {
+        throw new Error("invalid");
+      }
+
+      const result = Function(`"use strict"; return (${normalized})`)();
+      if (!Number.isFinite(result)) {
+        throw new Error("invalid");
+      }
+
+      return formatRawNumber(result, 6);
+    }
+
+    function calculatorInput(id, token) {
+      let current = calculatorState[id] || "0";
+
+      if (token === "clear") {
+        calculatorState[id] = "0";
+        setCalculatorDisplay(id);
+        return;
+      }
+
+      if (token === "backspace") {
+        current = current.length > 1 ? current.slice(0, -1) : "0";
+        calculatorState[id] = current;
+        setCalculatorDisplay(id);
+        return;
+      }
+
+      if (token === "=") {
+        try {
+          calculatorState[id] = evaluateCalculator(current);
+          setCalculatorDisplay(id);
+        } catch {
+          alert("計算式格式不正確，請重新輸入。");
+        }
+        return;
+      }
+
+      if (["+", "-", "*", "/", "(", ")"].includes(token)) {
+        calculatorState[id] = current === "0" && token !== "(" ? token : current + token;
+        setCalculatorDisplay(id);
+        return;
+      }
+
+      if (token === ".") {
+        const parts = current.split(/[-+*/()]/);
+        const lastPart = parts[parts.length - 1];
+        if (lastPart.includes(".")) return;
+      }
+
+      calculatorState[id] = current === "0" && token !== "." ? token : current + token;
+      setCalculatorDisplay(id);
+    }
+
+    function applyCalculatorValue(id) {
+      const target = document.getElementById(`${id}Target`).value;
+      let expression = calculatorState[id] || "0";
+
+      try {
+        expression = evaluateCalculator(expression);
+      } catch {
+        alert("小計算機公式格式無效。");
+        return;
+      }
+
+      calculatorState[id] = expression;
+      setCalculatorDisplay(id);
+      document.getElementById(target).value = expression;
+    }
+
+    function setCalculatorDisplay(id) {
+      const display = getCalculatorDisplay(id);
+      display.value = String(calculatorState[id] || "0")
+        .replace(/\*/g, "×")
+        .replace(/\//g, "÷");
+    }
+
+    function normalizeCalculatorToken(token) {
+      if (token === "×") return "*";
+      if (token === "÷") return "/";
+      if (token === "−") return "-";
+      if (token === "＋") return "+";
+      return token;
+    }
+
+    function resolveCalculatorValue(expression) {
+      const normalized = String(expression || "0").trim();
+      if (!normalized) {
+        throw new Error("invalid");
+      }
+
+      if (/^[0-9]+$/.test(normalized)) {
+        return normalized;
+      }
+
+      return evaluateCalculator(normalized);
+    }
+
+    function calculatorInput(id, token) {
+      let current = calculatorState[id] || "0";
+      const normalizedToken = normalizeCalculatorToken(token);
+
+      if (normalizedToken === "clear") {
+        calculatorState[id] = "0";
+        setCalculatorDisplay(id);
+        return;
+      }
+
+      if (normalizedToken === "backspace") {
+        current = current.length > 1 ? current.slice(0, -1) : "0";
+        calculatorState[id] = current;
+        setCalculatorDisplay(id);
+        return;
+      }
+
+      if (normalizedToken === "=") {
+        try {
+          calculatorState[id] = resolveCalculatorValue(current);
+          setCalculatorDisplay(id);
+        } catch {
+          alert("計算式格式不正確，請重新輸入。");
+        }
+        return;
+      }
+
+      if (["+", "-", "*", "/"].includes(normalizedToken)) {
+        calculatorState[id] = current === "0" ? normalizedToken : current + normalizedToken;
+        setCalculatorDisplay(id);
+        return;
+      }
+
+      calculatorState[id] = current === "0" ? normalizedToken : current + normalizedToken;
+      setCalculatorDisplay(id);
+    }
+
+    function calculatorApplyUnit(id, multiplier) {
+      try {
+        const baseValue = Number(resolveCalculatorValue(calculatorState[id] || "0"));
+        if (!Number.isFinite(baseValue)) {
+          throw new Error("invalid");
+        }
+
+        calculatorState[id] = formatRawNumber(baseValue * multiplier, 0);
+        setCalculatorDisplay(id);
+      } catch {
+        alert("請先輸入可計算的數值，再使用中文單位。");
+      }
+    }
+
+    function applyCalculatorValue(id) {
+      const target = document.getElementById(`${id}Target`).value;
+      let expression = calculatorState[id] || "0";
+
+      try {
+        expression = resolveCalculatorValue(expression);
+      } catch {
+        alert("請先完成計算，再帶入欄位。");
+        return;
+      }
+
+      calculatorState[id] = expression;
+      setCalculatorDisplay(id);
+      document.getElementById(target).value = expression;
+    }
+
+    function checkThemePreference() {
+      const lightMode = localStorage.getItem("lightMode");
+      const isLight = lightMode === "true";
+      document.body.classList.toggle("light-mode", isLight);
+      document.getElementById("darkModeToggle").checked = !isLight;
+    }
+
+    function toggleDarkMode() {
+      const darkMode = document.getElementById("darkModeToggle").checked;
+      document.body.classList.toggle("light-mode", !darkMode);
+      localStorage.setItem("lightMode", darkMode ? "false" : "true");
+    }
+
+    function syncDirectionCards() {
+      document.querySelectorAll('.radio-card input[name="convertDirection"]').forEach((input) => {
+        input.closest(".radio-card").classList.toggle("is-selected", input.checked);
+      });
+    }
+
+    function switchTab(event, id) {
+      document.querySelectorAll(".calculator").forEach((panel) => panel.classList.remove("active"));
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.classList.remove("active");
+        tab.setAttribute("aria-selected", "false");
+      });
+
+      document.getElementById(id).classList.add("active");
+      event.currentTarget.classList.add("active");
+      event.currentTarget.setAttribute("aria-selected", "true");
+    }
+
+    function updateConverterUI() {
+      const direction = document.querySelector('input[name="convertDirection"]:checked').value;
+      const isTwdToGame = direction === "twdToGame";
+
+      document.getElementById("amountLabel").textContent = isTwdToGame ? "台幣金額" : "遊戲幣金額";
+      document.getElementById("resultLabel").textContent = isTwdToGame ? "遊戲幣金額" : "台幣金額";
+
+      document.getElementById("amountInput").value = "";
+      document.getElementById("resultInput").value = "";
+      setEmptyResult("currencyResult", "此區顯示換算結果、套用匯率與相關數值資訊。");
+      document.getElementById("chineseFormatResult").textContent = "";
+      setChineseVisible("chineseFormatResult", false);
+      syncDirectionCards();
+    }
+
+    function swapConversion() {
+      const current = document.querySelector('input[name="convertDirection"]:checked').value;
+      const next = current === "twdToGame" ? "gameToTwd" : "twdToGame";
       document.querySelector(`input[name="convertDirection"][value="${next}"]`).checked = true;
       updateConverterUI();
     }
 
-    function calculateCurrency(){
-      const amount = parseFloat(document.getElementById('amountInput').value);
-      const rate = document.getElementById('customRateToggle').checked
-        ? parseFloat(document.getElementById('exchangeRate').value)
-        : 1000000;
-      const dir = document.querySelector('input[name="convertDirection"]:checked').value;
+    function calculateCurrency() {
+      const amount = parseFloat(document.getElementById("amountInput").value);
+      const rate = parseFloat(document.getElementById("exchangeRate").value);
+      const direction = document.querySelector('input[name="convertDirection"]:checked').value;
 
-      if (isNaN(amount) || amount <= 0 || isNaN(rate) || rate <= 0) {
-        alert('請輸入有效金額與匯率');
+      if (Number.isNaN(amount) || amount <= 0 || Number.isNaN(rate) || rate <= 0) {
+        alert("請輸入有效的金額與匯率。");
         return;
       }
 
-      let out, text;
-      if (dir === 'twdToGame'){
-        out = Math.floor(amount * rate);
-        text = `${amount.toLocaleString()} 台幣 = ${out.toLocaleString()} 遊戲幣`;
-        document.getElementById('resultInput').value = out;
-      }else{
-        out = Math.floor((amount / rate) * 100) / 100;
-        text = `${amount.toLocaleString()} 遊戲幣 = ${out.toLocaleString()} 台幣`;
-        document.getElementById('resultInput').value = out;
-      }
-      const box = document.getElementById('currencyResult');
-      box.textContent = text;
-      box.style.display = 'block';
+      const isTwdToGame = direction === "twdToGame";
+      const result = isTwdToGame
+        ? Math.floor(amount * rate)
+        : Math.floor((amount / rate) * 100) / 100;
 
-      if (document.getElementById('chineseFormatToggle').checked){
+      document.getElementById("resultInput").value = result;
+
+      const html = `
+        <p class="muted-line">使用匯率 1 台幣 = ${formatCurrencyText(rate, "遊戲幣")}</p>
+        <p>${isTwdToGame ? "換算結果" : "折算結果"}</p>
+        <span class="result-number">${formatCurrencyText(result, isTwdToGame ? "遊戲幣" : "台幣")}</span>
+        <p class="muted-line">${formatCurrencyText(amount, isTwdToGame ? "台幣" : "遊戲幣")} → ${formatCurrencyText(result, isTwdToGame ? "遊戲幣" : "台幣")}</p>
+      `;
+      setResultHtml("currencyResult", html);
+
+      if (document.getElementById("chineseFormatToggle").checked) {
         updateChineseFormat();
-        document.getElementById('chineseFormatResult').style.display = 'block';
+        setChineseVisible("chineseFormatResult", true);
       } else {
-        document.getElementById('chineseFormatResult').style.display = 'none';
+        setChineseVisible("chineseFormatResult", false);
       }
     }
 
-    function toggleChineseFormat(){
-      const toggle = document.getElementById('chineseFormatToggle');
-      const out = document.getElementById('resultInput').value;
-      const el = document.getElementById('chineseFormatResult');
-      if (toggle.checked && out){
+    function toggleChineseFormat() {
+      const result = document.getElementById("resultInput").value;
+      if (document.getElementById("chineseFormatToggle").checked && result) {
         updateChineseFormat();
-        el.style.display = 'block';
-      }else{
-        el.style.display = 'none';
-      }
-    }
-
-    function updateChineseFormat(){
-      const out = document.getElementById('resultInput').value;
-      const dir = document.querySelector('input[name="convertDirection"]:checked').value;
-      const el = document.getElementById('chineseFormatResult');
-      if (!out) return (el.textContent = '');
-      const num = parseFloat(out);
-      el.textContent = (dir === 'twdToGame')
-        ? `遊戲幣：${formatNumberToChinese(num)}`
-        : `台幣：${num.toFixed(2)}`;
-    }
-
-    /* ========== 銀行交易計算器 ========== */
-    function calculateBank(){
-      const amount = parseFloat(document.getElementById('bankAmount').value);
-      const type = document.getElementById('transactionType').value;
-      const wed = document.getElementById('wednesdayDiscount').checked;
-
-      if (isNaN(amount) || amount <= 0){
-        alert('請輸入有效金額');
-        return;
-      }
-
-      let fee = 0, finalAmount = amount, msg = '';
-
-      switch(type){
-        case 'cashDeposit':
-          fee = Math.floor(amount * (wed ? 0.075 : 0.1));
-          finalAmount = Math.floor(amount - fee);
-          msg = `存入銀行需扣除手續費：${fee.toLocaleString()} 瑪幣，實際存入：${finalAmount.toLocaleString()} 瑪幣`;
-          break;
-        case 'cashWithdraw':
-          msg = `從銀行提取現金無手續費，實際提取金額：${Math.floor(finalAmount).toLocaleString()} 瑪幣`;
-          break;
-        case 'checkIssue':
-          fee = Math.floor(amount * (wed ? 0.0375 : 0.05));
-          finalAmount = Math.floor(amount + fee);
-          msg = `開立支票需支付手續費：${fee.toLocaleString()} 瑪幣，總支出：${finalAmount.toLocaleString()} 瑪幣`;
-          break;
-        case 'checkDeposit':
-          msg = `支票存入銀行無手續費，實際存入金額：${Math.floor(finalAmount).toLocaleString()} 瑪幣`;
-          break;
-      }
-
-      const box = document.getElementById('bankResult');
-      box.textContent = msg;
-      box.style.display = 'block';
-
-      if (document.getElementById('bankChineseToggle').checked){
-        updateBankChineseFormat();
-        document.getElementById('bankChineseResult').style.display = 'block';
+        setChineseVisible("chineseFormatResult", true);
       } else {
-        document.getElementById('bankChineseResult').style.display = 'none';
+        setChineseVisible("chineseFormatResult", false);
       }
     }
 
-    function toggleBankChineseFormat(){
-      const on = document.getElementById('bankChineseToggle').checked;
-      const visible = document.getElementById('bankResult').style.display === 'block';
-      const el = document.getElementById('bankChineseResult');
-      if(on && visible){
-        updateBankChineseFormat();
-        el.style.display = 'block';
-      }else{
-        el.style.display = 'none';
-      }
-    }
-
-    function updateBankChineseFormat(){
-      const type = document.getElementById('transactionType').value;
-      const amount = parseFloat(document.getElementById('bankAmount').value);
-      const wed = document.getElementById('wednesdayDiscount').checked;
-
-      let fee = 0, finalAmount = amount, message = '';
-
-      switch(type){
-        case 'cashDeposit':
-          fee = Math.floor(amount * (wed ? 0.075 : 0.1));
-          finalAmount = Math.floor(amount - fee);
-          message = `手續費：${formatNumberToChinese(fee)} 瑪幣，實際存入：${formatNumberToChinese(finalAmount)} 瑪幣`;
-          break;
-        case 'cashWithdraw':
-          message = `實際提取金額：${formatNumberToChinese(Math.floor(finalAmount))} 瑪幣`;
-          break;
-        case 'checkIssue':
-          fee = Math.floor(amount * (wed ? 0.0375 : 0.05));
-          finalAmount = Math.floor(amount + fee);
-          message = `手續費：${formatNumberToChinese(fee)} 瑪幣，總支出：${formatNumberToChinese(finalAmount)} 瑪幣`;
-          break;
-        case 'checkDeposit':
-          message = `實際存入金額：${formatNumberToChinese(Math.floor(finalAmount))} 瑪幣`;
-          break;
-      }
-      document.getElementById('bankChineseResult').textContent = message;
-    }
-
-    /* ========== 拍賣手續費計算器 ========== */
-    function calculateAuctionFee(){
-      const amount = parseFloat(document.getElementById('auctionAmount').value);
-      const includeCheck = document.getElementById('includeCheckFee').checked;
-
-      if (isNaN(amount) || amount <= 0){
-        alert('請輸入有效金額');
+    function updateChineseFormat() {
+      const result = document.getElementById("resultInput").value;
+      const direction = document.querySelector('input[name="convertDirection"]:checked').value;
+      const output = document.getElementById("chineseFormatResult");
+      if (!result) {
+        output.textContent = "";
         return;
       }
 
-      // 一般物品
-      const normalAuctionFee = Math.floor(amount * 0.05);
+      const num = parseFloat(result);
+      output.textContent = direction === "twdToGame"
+        ? `原始數字：${formatRawNumber(num)} 遊戲幣`
+        : `原始數字：${formatRawNumber(num)} 台幣`;
+    }
+
+    function calculateBank() {
+      const amount = parseFloat(document.getElementById("bankAmount").value);
+      const type = document.getElementById("transactionType").value;
+      const wednesdayDiscount = document.getElementById("wednesdayDiscount").checked;
+
+      if (Number.isNaN(amount) || amount <= 0) {
+        alert("請輸入有效的交易金額。");
+        return;
+      }
+
+      let fee = 0;
+      let finalAmount = amount;
+      let title = "";
+      let description = "";
+      let rateText = "無手續費";
+
+      switch (type) {
+        case "cashDeposit":
+          fee = Math.floor(amount * (wednesdayDiscount ? 0.075 : 0.1));
+          finalAmount = Math.floor(amount - fee);
+          title = "現金存入銀行";
+          description = "手續費自存入金額中扣除。";
+          rateText = wednesdayDiscount ? "7.5%" : "10%";
+          break;
+        case "cashWithdraw":
+          finalAmount = Math.floor(amount);
+          title = "現金提取銀行";
+          description = "本項交易不收取手續費。";
+          break;
+        case "checkIssue":
+          fee = Math.floor(amount * (wednesdayDiscount ? 0.0375 : 0.05));
+          finalAmount = Math.floor(amount + fee);
+          title = "支票開立";
+          description = "手續費計入交易總支出。";
+          rateText = wednesdayDiscount ? "3.75%" : "5%";
+          break;
+        case "checkDeposit":
+          finalAmount = Math.floor(amount);
+          title = "支票存入銀行";
+          description = "本項交易不收取手續費。";
+          break;
+        default:
+          break;
+      }
+
+      const feeLine = fee > 0
+        ? `<p>手續費：<strong>${formatCurrencyText(fee, "金幣")}</strong></p>`
+        : `<p>手續費：<strong>0 金幣</strong></p>`;
+      const summaryLabel = type === "checkIssue" ? "實際總支出" : "最終金額";
+
+      const html = `
+        <p class="muted-line">${escapeHtml(title)}${wednesdayDiscount ? " ・ 已套用禮拜三折扣" : ""}</p>
+        <span class="result-number">${formatCurrencyText(finalAmount, "金幣")}</span>
+        <p>${escapeHtml(description)}</p>
+        <p>原始金額：<strong>${formatCurrencyText(amount, "金幣")}</strong></p>
+        <p>費率：<strong>${rateText}</strong></p>
+        ${feeLine}
+        <p class="muted-line">${summaryLabel}：${formatCurrencyText(finalAmount, "金幣")}</p>
+      `;
+      setResultHtml("bankResult", html);
+
+      if (document.getElementById("bankChineseToggle").checked) {
+        updateBankChineseFormat();
+        setChineseVisible("bankChineseResult", true);
+      } else {
+        setChineseVisible("bankChineseResult", false);
+      }
+    }
+
+    function toggleBankChineseFormat() {
+      const visible = document.getElementById("bankResult").classList.contains("result-box");
+      if (document.getElementById("bankChineseToggle").checked && visible) {
+        updateBankChineseFormat();
+        setChineseVisible("bankChineseResult", true);
+      } else {
+        setChineseVisible("bankChineseResult", false);
+      }
+    }
+
+    function updateBankChineseFormat() {
+      const amount = parseFloat(document.getElementById("bankAmount").value);
+      const type = document.getElementById("transactionType").value;
+      const wednesdayDiscount = document.getElementById("wednesdayDiscount").checked;
+      const output = document.getElementById("bankChineseResult");
+      if (Number.isNaN(amount) || amount <= 0) {
+        output.textContent = "";
+        return;
+      }
+
+      let fee = 0;
+      let finalAmount = amount;
+      let text = "";
+
+      switch (type) {
+        case "cashDeposit":
+          fee = Math.floor(amount * (wednesdayDiscount ? 0.075 : 0.1));
+          finalAmount = Math.floor(amount - fee);
+          text = `原始數字：手續費 ${formatRawNumber(fee)} 金幣，存入後剩 ${formatRawNumber(finalAmount)} 金幣`;
+          break;
+        case "cashWithdraw":
+          finalAmount = Math.floor(amount);
+          text = `原始數字：可提取 ${formatRawNumber(finalAmount)} 金幣`;
+          break;
+        case "checkIssue":
+          fee = Math.floor(amount * (wednesdayDiscount ? 0.0375 : 0.05));
+          finalAmount = Math.floor(amount + fee);
+          text = `原始數字：手續費 ${formatRawNumber(fee)} 金幣，開票總支出 ${formatRawNumber(finalAmount)} 金幣`;
+          break;
+        case "checkDeposit":
+          finalAmount = Math.floor(amount);
+          text = `原始數字：可存入 ${formatRawNumber(finalAmount)} 金幣`;
+          break;
+        default:
+          text = "";
+      }
+      output.textContent = text;
+    }
+
+    function calculateAuctionFee() {
+      const amount = parseFloat(document.getElementById("auctionAmount").value);
+      const includeCheckFee = document.getElementById("includeCheckFee").checked;
+
+      if (Number.isNaN(amount) || amount <= 0) {
+        alert("請輸入有效的拍賣金額。");
+        return;
+      }
+
       const afterNormalAuction = Math.floor(amount * 0.95);
-      let normalFinal = afterNormalAuction;
-      if (includeCheck){
-        normalFinal = Math.floor(afterNormalAuction * 0.95);
-      }
+      const normalFinal = includeCheckFee ? Math.floor(afterNormalAuction * 0.95) : afterNormalAuction;
 
-      // 生活服務物品
-      const lifeAuctionFee = Math.floor(amount * 0.04);
       const afterLifeAuction = Math.floor(amount * 0.96);
-      let lifeFinal = afterLifeAuction;
-      if (includeCheck){
-        lifeFinal = Math.floor(afterLifeAuction * 0.96);
-      }
+      const lifeFinal = includeCheckFee ? Math.floor(afterLifeAuction * 0.96) : afterLifeAuction;
 
-      const resultDiv = document.getElementById('auctionResult');
-      let html = `
-        <div class="section">
-          <h2>一般物品</h2>
-          <p>初始金額：<strong>${amount.toLocaleString()}</strong></p>
-          <p>拍賣手續費（5%）後：
-            <span class="formula">${amount.toLocaleString()} × 0.95 = ${afterNormalAuction.toLocaleString()}</span>
-          </p>
-          ${includeCheck ? `<p>支票手續費（5%）後：
-            <span class="formula">${afterNormalAuction.toLocaleString()} × 0.95 = ${normalFinal.toLocaleString()}</span></p>` : ``}
-          <p>最終金額：<span class="result-value">${normalFinal.toLocaleString()}</span></p>
-        </div>
-        <div class="section">
-          <h2>生活服務物品</h2>
-          <p>初始金額：<strong>${amount.toLocaleString()}</strong></p>
-          <p>拍賣手續費（4%）後：
-            <span class="formula">${amount.toLocaleString()} × 0.96 = ${afterLifeAuction.toLocaleString()}</span>
-          </p>
-          ${includeCheck ? `<p>支票手續費（4%）後：
-            <span class="formula">${afterLifeAuction.toLocaleString()} × 0.96 = ${lifeFinal.toLocaleString()}</span></p>` : ``}
-          <p>最終金額：<span class="result-value">${lifeFinal.toLocaleString()}</span></p>
+      const html = `
+        <div class="auction-summary">
+          <div class="auction-card">
+            <h4>一般物品</h4>
+            <p>原始拍賣金額：<strong>${formatCurrencyText(amount, "金幣")}</strong></p>
+            <p class="formula">${formatNumberToChinese(amount)} × 0.95 = ${formatNumberToChinese(afterNormalAuction)}</p>
+            ${includeCheckFee ? `<p class="formula">${formatNumberToChinese(afterNormalAuction)} × 0.95 = ${formatNumberToChinese(normalFinal)}</p>` : ""}
+            <p>最終金額：<span class="result-number" style="font-size:28px; margin-top:6px;">${formatCurrencyText(normalFinal, "金幣")}</span></p>
+          </div>
+          <div class="auction-card">
+            <h4>生活服務物品</h4>
+            <p>原始拍賣金額：<strong>${formatCurrencyText(amount, "金幣")}</strong></p>
+            <p class="formula">${formatNumberToChinese(amount)} × 0.96 = ${formatNumberToChinese(afterLifeAuction)}</p>
+            ${includeCheckFee ? `<p class="formula">${formatNumberToChinese(afterLifeAuction)} × 0.96 = ${formatNumberToChinese(lifeFinal)}</p>` : ""}
+            <p>最終金額：<span class="result-number" style="font-size:28px; margin-top:6px;">${formatCurrencyText(lifeFinal, "金幣")}</span></p>
+          </div>
         </div>
       `;
-      resultDiv.innerHTML = html;
-      resultDiv.style.display = 'block';
+      setResultHtml("auctionResult", html);
 
-      if (document.getElementById('auctionChineseToggle').checked){
+      if (document.getElementById("auctionChineseToggle").checked) {
         updateAuctionChineseFormat();
-        document.getElementById('auctionChineseResult').style.display = 'block';
+        setChineseVisible("auctionChineseResult", true);
       } else {
-        document.getElementById('auctionChineseResult').style.display = 'none';
+        setChineseVisible("auctionChineseResult", false);
       }
     }
 
-    function toggleAuctionChineseFormat(){
-      const on = document.getElementById('auctionChineseToggle').checked;
-      const visible = document.getElementById('auctionResult').style.display === 'block';
-      const el = document.getElementById('auctionChineseResult');
-      if (on && visible){
+    function toggleAuctionChineseFormat() {
+      const visible = document.getElementById("auctionResult").classList.contains("result-box");
+      if (document.getElementById("auctionChineseToggle").checked && visible) {
         updateAuctionChineseFormat();
-        el.style.display = 'block';
+        setChineseVisible("auctionChineseResult", true);
       } else {
-        el.style.display = 'none';
+        setChineseVisible("auctionChineseResult", false);
       }
     }
 
-    function updateAuctionChineseFormat(){
-      const amount = parseFloat(document.getElementById('auctionAmount').value);
-      const includeCheck = document.getElementById('includeCheckFee').checked;
+    function updateAuctionChineseFormat() {
+      const amount = parseFloat(document.getElementById("auctionAmount").value);
+      const includeCheckFee = document.getElementById("includeCheckFee").checked;
+      const output = document.getElementById("auctionChineseResult");
+      if (Number.isNaN(amount) || amount <= 0) {
+        output.textContent = "";
+        return;
+      }
 
       const afterNormalAuction = Math.floor(amount * 0.95);
-      const normalFinal = includeCheck ? Math.floor(afterNormalAuction * 0.95) : afterNormalAuction;
-
+      const normalFinal = includeCheckFee ? Math.floor(afterNormalAuction * 0.95) : afterNormalAuction;
       const afterLifeAuction = Math.floor(amount * 0.96);
-      const lifeFinal = includeCheck ? Math.floor(afterLifeAuction * 0.96) : afterLifeAuction;
+      const lifeFinal = includeCheckFee ? Math.floor(afterLifeAuction * 0.96) : afterLifeAuction;
 
-      let text = `一般物品：${formatNumberToChinese(normalFinal)} 瑪幣\n`;
-      text += `生活服務物品：${formatNumberToChinese(lifeFinal)} 瑪幣`;
-      document.getElementById('auctionChineseResult').textContent = text;
+      output.textContent =
+        `一般物品：${formatRawNumber(normalFinal)} 金幣\n` +
+        `生活服務物品：${formatRawNumber(lifeFinal)} 金幣`;
     }
 
-    /* 初始化 */
+    document.getElementById("darkModeToggle").addEventListener("change", toggleDarkMode);
+
+    setCalculatorDisplay("currencyCalc");
+    setCalculatorDisplay("bankCalc");
+    setCalculatorDisplay("auctionCalc");
     updateConverterUI();
     checkThemePreference();
   </script>
